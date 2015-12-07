@@ -5,6 +5,7 @@ require "uri"
 require "faraday"
 require "socket"
 require "json"
+require "thread"
 
 module Itamae
   module Handler
@@ -13,18 +14,17 @@ module Itamae
 
       def initialize(*)
         super
+        @mutex = Mutex.new
         @events = []
         start_thread
       end
 
       def event(type, payload = {})
         super
-        payload = payload.merge(
-          recipes: @recipes.dup,
-          resources: @resources.dup,
-          actions: @actions.dup,
-        )
-        @events << [type, payload]
+
+        @mutex.synchronize do
+          @events << [type, payload]
+        end
       end
 
       private
@@ -59,7 +59,7 @@ module Itamae
             end
             flush_events
           rescue Exception => err
-            Itamae.logger.error "Error during sending events to Itamae Server: #{err}"
+            Itamae.logger.warn "Error during sending events to Itamae Server: #{err}\n#{err.backtrace.join("\n")}"
           end
         end
 
@@ -71,8 +71,11 @@ module Itamae
       end
 
       def flush_events
-        events = @events
-        @events = []
+        events = nil
+        @mutex.synchronize do
+          events = @events
+          @events = []
+        end
 
         return if events.empty?
 
@@ -86,7 +89,10 @@ module Itamae
         end
 
         unless 200 <= res.status && res.status < 300
-          raise "Invalid response code from Itamae Server: #{res.status}\n#{res.body}"
+          @mutex.synchronize do
+            @events = events + @events
+          end
+          Itamae.logger.warn "Invalid response code from Itamae Server: #{res.status}\n#{res.body}"
         end
       end
     end
