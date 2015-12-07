@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Itamae::Reporter::ItamaeServer do
+describe Itamae::Handler::ItamaeServer do
   it 'has a version number' do
-    expect(Itamae::Reporter::ItamaeServer::VERSION).not_to be nil
+    expect(Itamae::Handler::ItamaeServer::VERSION).not_to be nil
   end
 
   it 'does something useful' do

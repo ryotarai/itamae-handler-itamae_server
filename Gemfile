@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in itamae-reporter-itamae_server.gemspec
+gem 'itamae', require: false, path: '~/src/github.com/ryotarai/itamae'
+# Specify your gem's dependencies in itamae-handler-itamae_server.gemspec
 gemspec

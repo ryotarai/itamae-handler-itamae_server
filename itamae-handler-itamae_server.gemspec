@@ -1,15 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'itamae/reporter/itamae_server/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "itamae-reporter-itamae_server"
-  spec.version       = Itamae::Reporter::ItamaeServer::VERSION
+  spec.name          = "itamae-handler-itamae_server"
+  spec.version       = File.read(File.join(__dir__, "lib/itamae/handler/itamae_server/version.txt")).strip
   spec.authors       = ["Ryota Arai"]
   spec.email         = ["ryota.arai@gmail.com"]
 
-  spec.summary       = %q{Reporter for Itamae Server}
+  spec.summary       = %q{Handler for Itamae Server}
   spec.homepage      = ""
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
