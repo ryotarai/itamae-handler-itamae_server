@@ -39,10 +39,6 @@ module Itamae
         @url ||= URI.parse(@options.fetch('url'))
       end
 
-      def hostname
-        @hostname ||= @options['hostname'] || Socket.gethostname
-      end
-
       def start_thread
         @thread = Thread.start do
           begin
